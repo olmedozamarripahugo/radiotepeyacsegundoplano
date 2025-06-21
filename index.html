@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Radio Tepeyac TV</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#4da6ff"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: url('fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin: 0.5rem 0;
+      text-align: center;
+    }
+    .tagline {
+      font-size: 1.2rem;
+      color: #4da6ff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .circle-player {
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .glow-ring {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 5px solid #4da6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: glow 2s infinite ease-in-out;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .glow-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 15px #4da6ff; }
+      50% { box-shadow: 0 0 30px #4da6ff; }
+    }
+    .now-playing {
+      font-size: 1rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .controls i {
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    .volume {
+      width: 120px;
+    }
+    .live-label {
+      font-size: 0.9rem;
+      color: #ccc;
+      text-align: center;
+    }
+    .social-icons {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .social-icons a {
+      color: white;
+      font-size: 2rem;
+    }
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    audio { display: none; }
+  </style>
+</head>
+<body>
+  <img src="banner.jpg" alt="Banner Radio Tepeyac" class="banner" style="max-width: 90%;">
+  <h1>1500 vatios de luz para tu alma</h1>
+  <div class="tagline">Fe, Vida y Cultura</div>
+
+  <div class="circle-player">
+    <div class="glow-ring" tabindex="0" onclick="togglePlay()">
+      <img src="logo.png" alt="Logo Radio Tepeyac" />
+    </div>
+  </div>
+
+  <div class="now-playing" id="nowPlaying">Cargando canción...</div>
+
+  <div class="controls">
+    <i class="fas fa-play" onclick="togglePlay()" title="Reproducir"></i>
+    <i class="fas fa-stop" onclick="stopAudio()" title="Detener"></i>
+    <input type="range" min="0" max="1" step="0.1" value="1" class="volume" onchange="setVolume(this.value)">
+    <div onclick="window.open('https://facebook.com/profile.php?id=100007031445504&v=live')">
+      <i class="fab fa-facebook-square"></i>
+      <div class="live-label">Transmisión en vivo</div>
+    </div>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://facebook.com/profile.php?id=100007031445504" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="https://wa.me/529811016637" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://miparroquiadijital.space" target="_blank"><i class="fas fa-globe"></i></a>
+  </div>
+
+  <audio id="audio" src="https://c19.radioboss.fm:8169/stream" preload="auto"></audio>
+
+  <div class="footer">© 2025 Radio Tepeyac · Todos los derechos reservados</div>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const nowPlaying = document.getElementById("nowPlaying");
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play().catch(e => console.log(e));
+      } else {
+        audio.pause();
+      }
+    }
+    function stopAudio() {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    function setVolume(val) {
+      audio.volume = val;
+    }
+    function updateNowPlaying() {
+      const now = new Date();
+      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      nowPlaying.textContent = `🎵 Radio Tepeyac | 🕒 ${time}`;
+    }
+    setInterval(updateNowPlaying, 10000);
+    updateNowPlaying();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+</body>
+</html>
