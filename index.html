@@ -9,37 +9,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#4da6ff"/>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: 'Montserrat', sans-serif;
-      background: url('fondo.mp4') no-repeat center center fixed;
-      background-size: cover;
       color: white;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
       padding: 1rem;
+      position: relative;
+      z-index: 1;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    video#bg-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+    }
+
     h1 {
       font-size: 1.8rem;
       margin: 0.5rem 0;
-      text-align: center;
+      text-shadow: 2px 2px 5px black;
     }
+
     .tagline {
       font-size: 1.2rem;
       color: #4da6ff;
-      text-align: center;
       margin-bottom: 2rem;
     }
+
     .circle-player {
       width: 220px;
       height: 220px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .glow-ring {
       width: 100%;
       height: 100%;
@@ -52,21 +86,24 @@
       padding: 10px;
       box-sizing: border-box;
     }
+
     .glow-ring img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
     }
+
     @keyframes glow {
       0%, 100% { box-shadow: 0 0 15px #4da6ff; }
       50% { box-shadow: 0 0 30px #4da6ff; }
     }
+
     .now-playing {
       font-size: 1rem;
-      text-align: center;
       margin: 1rem 0;
     }
+
     .controls {
       display: flex;
       align-items: center;
@@ -74,68 +111,92 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
     .controls i {
       font-size: 2rem;
       cursor: pointer;
     }
+
     .volume {
       width: 120px;
     }
+
     .live-label {
       font-size: 0.9rem;
       color: #ccc;
-      text-align: center;
     }
+
     .social-icons {
       margin-top: 2rem;
       display: flex;
       justify-content: center;
       gap: 1.5rem;
     }
+
     .social-icons a {
       color: white;
       font-size: 2rem;
     }
+
     .footer {
       margin-top: 2rem;
       font-size: 0.9rem;
       text-align: center;
     }
-    audio { display: none; }
+
+    audio {
+      display: none;
+    }
+
+    .banner {
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px black;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
-  <img src="banner.jpg" alt="Banner Radio Tepeyac" class="banner" style="max-width: 90%;">
-  <h1>1500 vatios de luz para tu alma</h1>
-  <div class="tagline">Fe, Vida y Cultura</div>
+  <!-- 🎥 Video de fondo -->
+  <video autoplay muted loop id="bg-video">
+    <source src="fondo.mp4" type="video/mp4">
+    <!-- Alternativa con gif -->
+    <!-- <source src="fondo.gif" type="image/gif"> -->
+  </video>
 
-  <div class="circle-player">
-    <div class="glow-ring" tabindex="0" onclick="togglePlay()">
-      <img src="logo.png" alt="Logo Radio Tepeyac" />
+  <div class="content">
+    <img src="banner.jpg" alt="Banner Radio Tepeyac" class="banner">
+    <h1>1500 vatios de luz para tu alma</h1>
+    <div class="tagline">Fe, Vida y Cultura</div>
+
+    <div class="circle-player">
+      <div class="glow-ring" tabindex="0" onclick="togglePlay()">
+        <img src="logo.png" alt="Logo Radio Tepeyac" />
+      </div>
     </div>
-  </div>
 
-  <div class="now-playing" id="nowPlaying">Cargando canción...</div>
+    <div class="now-playing" id="nowPlaying">Cargando canción...</div>
 
-  <div class="controls">
-    <i class="fas fa-play" onclick="togglePlay()" title="Reproducir"></i>
-    <i class="fas fa-stop" onclick="stopAudio()" title="Detener"></i>
-    <input type="range" min="0" max="1" step="0.1" value="1" class="volume" onchange="setVolume(this.value)">
-    <div onclick="window.open('https://facebook.com/profile.php?id=100007031445504&v=live')">
-      <i class="fab fa-facebook-square"></i>
-      <div class="live-label">Transmisión en vivo</div>
+    <div class="controls">
+      <i class="fas fa-play" onclick="togglePlay()" title="Reproducir"></i>
+      <i class="fas fa-stop" onclick="stopAudio()" title="Detener"></i>
+      <input type="range" min="0" max="1" step="0.1" value="1" class="volume" onchange="setVolume(this.value)">
+      <div onclick="window.open('https://facebook.com/profile.php?id=100007031445504&v=live')">
+        <i class="fab fa-facebook-square"></i>
+        <div class="live-label">Transmisión en vivo</div>
+      </div>
     </div>
+
+    <div class="social-icons">
+      <a href="https://facebook.com/profile.php?id=100007031445504" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://wa.me/529811016637" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://miparroquiadijital.space" target="_blank"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <audio id="audio" src="https://c19.radioboss.fm:8169/stream" preload="auto"></audio>
+
+    <div class="footer">© 2025 Radio Tepeyac · Todos los derechos reservados</div>
   </div>
-
-  <div class="social-icons">
-    <a href="https://facebook.com/profile.php?id=100007031445504" target="_blank"><i class="fab fa-facebook"></i></a>
-    <a href="https://wa.me/529811016637" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://miparroquiadijital.space" target="_blank"><i class="fas fa-globe"></i></a>
-  </div>
-
-  <audio id="audio" src="https://c19.radioboss.fm:8169/stream" preload="auto"></audio>
-
-  <div class="footer">© 2025 Radio Tepeyac · Todos los derechos reservados</div>
 
   <script>
     const audio = document.getElementById("audio");
@@ -148,24 +209,34 @@
         audio.pause();
       }
     }
+
     function stopAudio() {
       audio.pause();
       audio.currentTime = 0;
     }
+
     function setVolume(val) {
       audio.volume = val;
     }
+
     function updateNowPlaying() {
       const now = new Date();
       const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       nowPlaying.textContent = `🎵 Radio Tepeyac | 🕒 ${time}`;
     }
+
     setInterval(updateNowPlaying, 10000);
     updateNowPlaying();
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
     }
+
+    document.addEventListener('deviceready', function () {
+      if (cordova && cordova.plugins && cordova.plugins.backgroundMode) {
+        cordova.plugins.backgroundMode.enable();
+      }
+    }, false);
   </script>
 </body>
 </html>
